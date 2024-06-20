@@ -1,0 +1,79 @@
+;
+;### Gromacs NPT eq MDP script ###
+;
+;v0.0
+;2023.09.30 | 11:14
+;Author: Matej Kožić | mkozic@chem.pmf.hr
+;
+;End of comment
+;########################################
+;///////////////////////////////////////#
+;########################################
+
+title		 	= NPT equilibration
+
+; Run parameters
+continuation		= yes				
+integrator              = md				
+dt                      = npt_dt				
+
+; Output control
+nsteps                  = npt_nsteps			
+nstxout			= 0				
+nstxtcout               = npt_nstxtcout		
+nstvout                 = 0				
+nstfout                 = 0				
+nstcalcenergy           = npt_nstcalcenergy			
+nstenergy               = npt_nstenergy			
+nstlog                  = npt_nstlog				
+
+; Bond parameters
+constraints		= h-bonds			
+constraint-algorithm 	= lincs				
+lincs-order		= 4				
+lincs-iter		= 1				
+
+; Neighbor searching
+cutoff-scheme           = Verlet
+nstlist                 = 20	
+ns-type			= grid			
+pbc			= xyz		
+rlist			= 1.2	
+
+; Electrostatics
+coulombtype             = PME
+rcoulomb                = 1.2
+pme-order		= 4			 
+fourierspacing          = 0.16			
+
+; Van der Waals
+vdwtype                 = Cut-off			
+vdw-modifier            = Force-switch			
+rvdw-switch             = 1.0				
+rvdw                    = 1.2				
+DispCorr		= no				
+
+; Temperature coupling
+tcoupl                  = V-rescale			
+tc-grps                 = npt_tc_group1 npt_tc_group2
+tau-t                   = 1.0 1.0			
+ref-t                   = npt_ref_temp npt_ref_temp			
+
+; Pressure coupling
+pcoupl			= C-rescale			
+pcoupltype		= isotropic			
+tau-p			= 1.0			
+ref-p			= 1.0				
+compressibility		= 4.5e-5			
+
+; Velocity generation
+gen-vel                 = no				
+
+; COM motion removal
+comm-mode               = linear			
+comm-grps               = System			
+nstcomm                 = 100				
+
+;########################################
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+; E N D #################################

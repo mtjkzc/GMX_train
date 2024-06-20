@@ -1,0 +1,80 @@
+;
+;### Gromacs NVT eq MDP script ###
+;
+;v0.0
+;2023.09.30 | 11:14
+;Author: Matej Kožić | mkozic@chem.pmf.hr
+;
+;End of comment
+;########################################
+;///////////////////////////////////////#
+;########################################
+
+title			= NVT equilibration
+
+; Run parameters
+continuation		= no			
+integrator              = md			
+dt                      = nvt_dt	
+
+; Output control
+nsteps                  = nvt_nsteps		
+nstxout			= 0			
+nstxtcout               = nvt_nstxtcout	
+nstvout                 = 0			
+nstfout                 = 0			
+nstcalcenergy           = nvt_nstcalcenergy	
+nstenergy               = nvt_nstenergy			
+nstlog                  = nvt_nstlog			
+
+; Bond parameters
+constraints		= h-bonds		
+constraint-algorithm 	= lincs			
+lincs-order		= 4			
+lincs-iter		= 1			
+
+; Neighbor searching
+cutoff-scheme           = Verlet		
+nstlist                 = 20			
+ns-type			= grid			
+pbc			= xyz			
+rlist			= 1.2			
+
+; Electrostatics
+coulombtype             = PME			
+rcoulomb                = 1.2			
+pme-order	  	= 4		 	
+fourierspacing  	= 0.16			
+
+; Van der Waals
+vdwtype                 = Cut-off		
+vdw-modifier            = Force-switch		
+rvdw-switch             = 1.0			
+rvdw                    = 1.2			
+DispCorr		= no			
+
+; Temperature coupling
+tcoupl                  = V-rescale				
+tc-grps                 = nvt_tc_group1 nvt_tc_group2		
+tau-t                   = 1.0 1.0				
+ref-t                   = nvt_ref_temp nvt_ref_temp			
+annealing		= single single		   		
+annealing_npoints	= 2 2 		        		
+annealing_time 		= 0 nvt_annealing_time 0 nvt_annealing_time		    		
+annealing_temp		= nvt_annealing_temp_start nvt_annealing_temp_goal nvt_annealing_temp_start nvt_annealing_temp_goal		    		
+
+; Pressure coupling
+pcoupl			= no					
+
+; Velocity generation
+gen-vel                 = yes					
+gen-temp		= 10					
+
+; COM motion removal
+comm-mode               = linear			
+comm-grps               = System			
+nstcomm                 = 100				
+
+;########################################
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+; E N D #################################
